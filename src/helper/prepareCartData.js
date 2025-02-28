@@ -44,7 +44,8 @@ const prepareCartItem = (cartLines) => {
       properties: attributes,
       quantity: line.node.quantity,
       variant_id: extractedId,
-      key: `${merchandise.id}:${attributes["_aovCampId"] || ""}`,
+      // key: `${merchandise.id}:${attributes["_aovCampId"] || ""}`,
+      key: line.node.id,
       title: merchandise.title,
       price,
       original_price: price,
@@ -80,4 +81,28 @@ export const prepareAddToCart = (product) => {
     merchandiseId: `gid://shopify/ProductVariant/${product.id}`,
     attributes: attributes,
   };
+};
+
+export const prepareUpdateCartItems = (data) => {
+  return Object.keys(data).map((key) => {
+    return {
+      id: key,
+      quantity: data[key],
+    };
+  });
+};
+
+export const prepareChangeCartItem = (data) => {
+  return [
+    {
+      id: data.id,
+      attributes: Object.keys(data.properties || {}).map((key) => {
+        return {
+          key: key,
+          value: data.properties[key],
+        };
+      }),
+      quantity: data.quantity,
+    },
+  ];
 };

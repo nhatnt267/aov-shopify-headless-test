@@ -7,19 +7,23 @@ export class BaseCartClient {
     throw new Error("Not implemented");
   }
 
-  async getCart(cartId) {
+  async getCart() {
     throw new Error("Not implemented");
   }
 
-  async addToCart(cartId, lines) {
+  async addToCart(data) {
     throw new Error("Not implemented");
   }
 
-  async updateCartItem(cartId, lines) {
+  async changeLineItem(data) {
     throw new Error("Not implemented");
   }
 
-  async removeFromCart(cartId, lineIds) {
+  async updateCartItemsForLineId(data) {
+    throw new Error("Not implemented");
+  }
+
+  async removeFromCart(data) {
     throw new Error("Not implemented");
   }
 }

@@ -7,13 +7,18 @@ import {
   removeFromCartMutation,
 } from "./graphql/graphqlQuery";
 import { extractIdFromGid } from "./helper/extractIdFromGid";
-import { prepareAddToCart, prepareCartData } from "./helper/prepareCartData";
+import {
+  prepareAddToCart,
+  prepareCartData,
+  prepareUpdateCartItems,
+  prepareChangeCartItem,
+} from "./helper/prepareCartData";
 
 export class ShopifyCartClient extends BaseCartClient {
   constructor(options) {
     super(options);
     this.config = {
-      apiVersion: "2024-01",
+      apiVersion: "2025-01",
       ...options.config,
     };
   }
@@ -89,14 +94,14 @@ export class ShopifyCartClient extends BaseCartClient {
     }
   }
 
-  async updateCartItem(lines) {
+  async updateCartItemsForLineId(data) {
     try {
-      if (!lines) {
-        throw new Error("Lines are required");
+      if (!data) {
+        throw new Error("Data are required");
       }
       const graphqlQuery = updateCartItemMutation;
       await this.fetchStorefront(graphqlQuery, {
-        lines,
+        lines: prepareUpdateCartItems(data),
       });
       return { success: true };
     } catch (error) {
@@ -117,6 +122,22 @@ export class ShopifyCartClient extends BaseCartClient {
       return { success: true };
     } catch (error) {
       console.error("AOV shopify headless error removing from cart", error);
+      throw error;
+    }
+  }
+
+  async changeCartItem(data) {
+    try {
+      if (!data) {
+        throw new Error("Data are required");
+      }
+      const graphqlQuery = updateCartItemMutation;
+      await this.fetchStorefront(graphqlQuery, {
+        lines: prepareChangeCartItem(data),
+      });
+      return { success: true };
+    } catch (error) {
+      console.error("AOV shopify headless error changing cart item", error);
       throw error;
     }
   }
